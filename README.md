@@ -21,6 +21,8 @@
 <p>
   <a href="https://arxiv.org/html/2605.02212v1"><b>Challenge Report</b></a>
   |
+  <a href="./README.zh-CN.md"><b>中文文档</b></a>
+  |
   <a href="#quick-start"><b>Quick Start</b></a>
   |
   <a href="#results"><b>Results</b></a>
@@ -240,10 +242,10 @@ For more details, see [Reproducibility Notes](docs/REPRODUCIBILITY.md) and [Mode
 
 **HIT-LLIE-team**
 
-| Member | Affiliation |
-| --- | --- |
-| Xinbai Wang | Harbin Institute of Technology |
-| Duo Liu | Harbin Institute of Technology |
+| Member | GitHub | Affiliation |
+| --- | --- | --- |
+| Xinbai Wang | [w-xb](https://github.com/w-xb) | Harbin Institute of Technology |
+| Duo Liu | [Cat-blizzard](https://github.com/Cat-blizzard) | Harbin Institute of Technology |
 
 Contact information is available in `team_info.txt`.
 
