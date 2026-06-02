@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Environments
+.env
+.venv/
+venv/
+env/
+*.conda
+
+# Editors / OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs and experiments
+*.log
+experiments/
+
+# Datasets and generated predictions
+lowlight/low/*
+lowlight/normal/*
+competition/low/*
+competition/enhanced_pt/*
+competition/test/*
+
+# Keep directory placeholders if added later
+!lowlight/low/.gitkeep
+!lowlight/normal/.gitkeep
+!competition/low/.gitkeep
+!competition/enhanced_pt/.gitkeep
+
+# Keep the released checkpoint
+!result/model_best.pt

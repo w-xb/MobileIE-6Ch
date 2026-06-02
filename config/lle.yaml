@@ -1,0 +1,60 @@
+exp_name: lle_competition
+
+train:
+  warmup: true
+  warmup_epoch: 20
+  lr_warmup: 1e-6
+
+  train_inp: ./lowlight/low
+  train_gt: ./lowlight/normal
+
+  # Five-fold cross validation. The current fold is indexed from 0 to 4.
+  k_folds: 5
+  current_fold: 0
+
+  # Patch-based training for large low-light images.
+  patch_size: 768
+  batch_size: 16
+  epoch: 800
+  lr: 1.5e-4
+  num_workers: 4
+  save_every: 20
+  save_slim: true
+
+  # Distributed training.
+  use_ddp: true
+  use_compile: false
+  resume: false
+
+  # Optimization stability.
+  grad_clip: 0.5
+  lr_scheduler: cosine
+
+  # Exponential moving average.
+  use_ema: true
+  ema_decay: 0.999
+
+  # Data augmentation.
+  use_gamma: true
+  gamma_range: [0.7, 1.3]
+
+  # Multi-scale cropping to reduce the train-on-patch / test-on-full-image gap.
+  global_crop_prob: 0.5
+  scale_range: [0.15, 0.6]
+
+test:
+  test_inp: ./competition/test/low
+  test_gt: ./competition/test/low
+  num_workers: 0
+  save: true
+
+demo:
+  demo_inp: ./competition/test/low
+  num_workers: 0
+
+model:
+  type: re-parameterized # [original, re-parameterized]
+  pretrained: ""
+  need_slim: false
+  rep_scale: 4
+  channels: 32

@@ -1,0 +1,25 @@
+# PyTorch
+torch>=2.5.0
+torchvision>=0.20.0
+
+# Image Processing
+opencv-python>=4.10.0
+Pillow>=11.0.0
+
+# Scientific Computing
+numpy>=2.1.0
+scipy>=1.13.0
+
+# Utilities
+tqdm>=4.66.0
+ruamel.yaml>=0.17.0
+colorama>=0.4.6
+
+# Data Loading
+datasets>=4.6.0
+
+# Optional: For model conversion (ONNX to TFLite)
+# tensorflow>=2.0.0
+# onnx>=1.0.0
+# onnxruntime>=1.0.0
+# onnx-sim>=0.4.0
