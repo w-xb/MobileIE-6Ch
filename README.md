@@ -1,62 +1,95 @@
-# MobileIE-6Ch: Efficient Low-Light Image Enhancement
+<div align="center">
 
-Official implementation of **MobileIE-6Ch**, the HIT-LLIE-team submission to the **NTIRE 2026 Efficient Low-Light Image Enhancement Challenge**.
+# MobileIE-6Ch
 
-MobileIE-6Ch is an ultra-lightweight, fully convolutional low-light image enhancement model built on the MobileIE family. It predicts a 6-channel Retinex-style representation: three RGB illumination channels and three residual channels for noise/detail compensation. The submitted inference checkpoint has only **101,922 parameters** and is included in this repository.
+### Efficient Low-Light Image Enhancement for NTIRE 2026
 
-[[Paper / Challenge Report](https://arxiv.org/html/2605.02212v1)] [[NTIRE 2026](https://cvlai.net/ntire/2026/)]
+**HIT-LLIE-team solution for the NTIRE 2026 Efficient Low-Light Image Enhancement Challenge**
 
-## Highlights
+<p>
+  <a href="https://arxiv.org/html/2605.02212v1">
+    <img src="https://img.shields.io/badge/arXiv-2605.02212-b31b1b.svg" alt="arXiv">
+  </a>
+  <img src="https://img.shields.io/badge/NTIRE-2026-blue.svg" alt="NTIRE 2026">
+  <img src="https://img.shields.io/badge/Params-101.9K-brightgreen.svg" alt="Parameters">
+  <img src="https://img.shields.io/badge/PyTorch-2.5%2B-ee4c2c.svg" alt="PyTorch">
+  <a href="./LICENSE">
+    <img src="https://img.shields.io/badge/License-Apache--2.0-yellow.svg" alt="License">
+  </a>
+</p>
 
-- **Ultra-lightweight model**: 101,922 parameters in the released checkpoint.
-- **6-channel enhancement head**: jointly estimates RGB illumination and residual correction.
-- **Retinex-inspired reconstruction**: enhances brightness while suppressing low-light noise.
-- **Multi-Branch Reparameterization (MBR)**: uses richer branches during training and compact convolutions for inference.
-- **Dual attention modulation**: adaptively refines features for diverse dark scenes.
-- **Ready-to-run inference**: pretrained checkpoint is provided at `result/model_best.pt`.
+<p>
+  <a href="https://arxiv.org/html/2605.02212v1"><b>Challenge Report</b></a>
+  |
+  <a href="#quick-start"><b>Quick Start</b></a>
+  |
+  <a href="#results"><b>Results</b></a>
+  |
+  <a href="#citation"><b>Citation</b></a>
+</p>
 
-## NTIRE 2026 Results
+</div>
 
-The challenge report lists HIT-LLIE-team / MobileIE-6Ch in the NTIRE 2026 Efficient Low-Light Image Enhancement results.
+---
 
-| Table | SSIM | LPIPS | DISTS | LIQE | MUSIQ | Q-Align | Params | Final Rank |
+## Overview
+
+**MobileIE-6Ch** is an ultra-lightweight low-light image enhancement network designed for efficient deployment. The model is based on the MobileIE family and introduces a **6-channel Retinex-style prediction head** that estimates:
+
+- **3 RGB illumination channels** for color-aware brightness recovery
+- **3 residual channels** for noise/detail compensation
+
+The released checkpoint contains only **101,922 parameters**, while still targeting visually pleasing enhancement under strict NTIRE efficiency constraints. The repository includes inference code, DDP training code, configuration files, and the submitted checkpoint.
+
+## Why MobileIE-6Ch?
+
+| Design Goal | What We Do |
+| --- | --- |
+| Compact inference | Use the slim reparameterized MobileIE form for deployment |
+| Color-aware illumination | Predict RGB illumination instead of a single grayscale map |
+| Noise/detail recovery | Add an RGB residual branch after Retinex division |
+| Training capacity | Use Multi-Branch Reparameterization during training |
+| Stable optimization | Combine warm-up, EMA, gradient clipping, cosine scheduling, and multi-scale crops |
+
+## Results
+
+MobileIE-6Ch is listed in the official **NTIRE 2026 Efficient Low-Light Image Enhancement Challenge** report.
+
+| Evaluation Table | SSIM | LPIPS | DISTS | LIQE | MUSIQ | Q-Align | Params | Final Rank |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Main technical-report table | 0.5766 | 0.5176 | 0.2319 | 2.2977 | 60.3387 | 3.2007 | 101,922 | 7 |
-| Full final-testing table | 0.5766 | 0.5176 | 0.2319 | 2.2977 | 60.3387 | 3.2007 | 101,922 | 9 |
+| Main technical-report table | 0.5766 | 0.5176 | 0.2319 | 2.2977 | 60.3387 | 3.2007 | 101,922 | **7** |
+| Full final-testing table | 0.5766 | 0.5176 | 0.2319 | 2.2977 | 60.3387 | 3.2007 | 101,922 | **9** |
 
-The full table includes teams that participated in final testing but did not submit a technical report; the main paper table reports teams included in the technical-methods section.
+The full final-testing table includes teams that participated in final testing but did not submit a technical report. The main table reports teams included in the technical-methods section of the challenge report.
 
-## Repository Structure
+## Method
 
-```text
-.
-|-- competition/
-|   |-- low/                 # Put low-light images here for inference
-|   `-- enhanced_pt/         # Inference outputs are written here
-|-- config/
-|   `-- lle.yaml             # Training and model configuration
-|-- data/
-|   |-- lledata.py           # Low-light enhancement dataset loader
-|   `-- ispdata.py
-|-- lowlight/
-|   |-- low/                 # Training low-light images
-|   `-- normal/              # Training ground-truth images
-|-- model/
-|   |-- lle.py               # Original MobileIE LLE model
-|   |-- lle_6channel.py      # MobileIE-6Ch model
-|   `-- utils_IWO.py         # MBR and feature modulation blocks
-|-- result/
-|   `-- model_best.pt        # Released MobileIE-6Ch checkpoint
-|-- infer_6channel.py        # Inference script
-|-- main_ddp.py              # DDP training entry point
-|-- train_ddp.sh             # Training launcher
-|-- requirements.txt
-`-- team_info.txt
+MobileIE-6Ch follows a compact Retinex-inspired enhancement pipeline. Instead of estimating only one illumination channel, the model predicts RGB illumination maps and residual corrections jointly.
+
+```mermaid
+flowchart LR
+    A["Low-light RGB image"] --> B["MobileIE-6Ch backbone"]
+    B --> C["Dual attention modulation"]
+    C --> D["6-channel prediction"]
+    D --> E["RGB illumination map"]
+    D --> F["RGB residual map"]
+    A --> G["Retinex reconstruction"]
+    E --> G
+    F --> G
+    G --> H["Enhanced RGB image"]
 ```
 
-## Installation
+The final image is reconstructed as:
 
-The code was developed with PyTorch and CUDA. Python 3.8+ is recommended; Python 3.10 is also suitable.
+```text
+enhanced = input / illumination + residual
+```
+
+During training, multi-branch convolution blocks improve representation capacity. For inference, the model uses the slim reparameterized form, keeping the checkpoint small and easy to deploy.
+
+## Quick Start
+
+### 1. Installation
 
 ```bash
 conda create -n mobileie python=3.10 -y
@@ -64,53 +97,53 @@ conda activate mobileie
 pip install -r requirements.txt
 ```
 
-Install the PyTorch build that matches your CUDA version if the default wheel is not suitable for your machine.
+If your CUDA version requires a specific PyTorch wheel, install the matching PyTorch build first, then install the remaining dependencies.
 
-## Inference
+### 2. Prepare Images
 
-1. Put input images into:
+Put low-light images into:
 
 ```text
 competition/low/
 ```
 
-2. Run:
+### 3. Run Inference
 
 ```bash
 python infer_6channel.py
 ```
 
-3. Enhanced images will be saved to:
+Enhanced images will be saved to:
 
 ```text
 competition/enhanced_pt/
 ```
 
-By default, `infer_6channel.py` loads:
+By default, the script loads the released checkpoint:
 
 ```text
 result/model_best.pt
 ```
 
-The script automatically uses CUDA when available; otherwise it falls back to CPU.
+The script uses CUDA automatically when available and falls back to CPU otherwise.
 
 ## Training
 
-Prepare paired training data:
+Prepare paired training data with matching filenames:
 
 ```text
 lowlight/
-|-- low/       # low-light inputs
-`-- normal/    # normal-light ground truth with matching filenames
+|-- low/       # Low-light inputs
+`-- normal/    # Normal-light ground truth
 ```
 
-Start DDP training:
+Launch DDP training:
 
 ```bash
 bash train_ddp.sh
 ```
 
-You can also choose a custom GPU list:
+Choose a custom GPU list if needed:
 
 ```bash
 bash train_ddp.sh "0" 1
@@ -118,7 +151,7 @@ bash train_ddp.sh "0,1" 2
 bash train_ddp.sh "0,1,2,3" 4
 ```
 
-The main configuration is in `config/lle.yaml`. The released setting uses:
+The main configuration is in `config/lle.yaml`.
 
 | Setting | Value |
 | --- | --- |
@@ -134,39 +167,50 @@ The main configuration is in `config/lle.yaml`. The released setting uses:
 | EMA | Enabled |
 | Gradient clipping | 0.5 |
 
-Checkpoints and logs are written under `experiments/`.
+Training logs and checkpoints are written under `experiments/`.
 
-## Method Summary
-
-MobileIE-6Ch follows a compact Retinex-style enhancement pipeline:
+## Repository Layout
 
 ```text
-low-light RGB image
-        |
-        v
-MobileIE-6Ch feature extractor + dual attention
-        |
-        v
-6-channel prediction = RGB illumination + RGB residual
-        |
-        v
-enhanced image = input / illumination + residual
+.
+|-- competition/
+|   |-- low/                 # Inference inputs
+|   `-- enhanced_pt/         # Inference outputs
+|-- config/
+|   `-- lle.yaml             # Training and model configuration
+|-- data/
+|   |-- lledata.py           # Low-light enhancement dataset loader
+|   `-- ispdata.py
+|-- lowlight/
+|   |-- low/                 # Training low-light images
+|   `-- normal/              # Training ground-truth images
+|-- model/
+|   |-- lle.py               # Original MobileIE LLE model
+|   |-- lle_6channel.py      # MobileIE-6Ch model
+|   `-- utils_IWO.py         # MBR and feature modulation blocks
+|-- result/
+|   `-- model_best.pt        # Released MobileIE-6Ch checkpoint
+|-- infer_6channel.py        # Inference entry point
+|-- main_ddp.py              # DDP training entry point
+|-- train_ddp.sh             # Training launcher
+|-- requirements.txt
+`-- team_info.txt
 ```
-
-During training, multi-branch convolution blocks improve representation capacity. For inference, the model uses the slim reparameterized form, keeping deployment simple and compact.
 
 ## Team
 
 **HIT-LLIE-team**
 
-- Xinbai Wang, Harbin Institute of Technology
-- Duo Liu, Harbin Institute of Technology
+| Member | Affiliation |
+| --- | --- |
+| Xinbai Wang | Harbin Institute of Technology |
+| Duo Liu | Harbin Institute of Technology |
 
 Contact information is available in `team_info.txt`.
 
 ## Citation
 
-If this repository helps your research, please cite the NTIRE 2026 challenge report and this solution:
+If this repository is helpful to your research, please cite the NTIRE 2026 challenge report and this solution.
 
 ```bibtex
 @article{yan2026ntire,
@@ -188,8 +232,8 @@ If this repository helps your research, please cite the NTIRE 2026 challenge rep
 
 ## Acknowledgements
 
-This work is built upon the MobileIE baseline and was developed for the NTIRE 2026 Efficient Low-Light Image Enhancement Challenge.
+This project was developed for the **NTIRE 2026 Efficient Low-Light Image Enhancement Challenge**. We thank the challenge organizers and the MobileIE authors for the baseline inspiration.
 
 ## License
 
-This project is released under the Apache License 2.0. See `LICENSE` for details.
+This repository is released under the **Apache License 2.0**. See [LICENSE](./LICENSE) for details.
