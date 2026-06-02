@@ -25,6 +25,8 @@
   |
   <a href="#results"><b>Results</b></a>
   |
+  <a href="#reproducibility"><b>Reproducibility</b></a>
+  |
   <a href="#citation"><b>Citation</b></a>
 </p>
 
@@ -40,6 +42,12 @@
 - **3 residual channels** for noise/detail compensation
 
 The released checkpoint contains only **101,922 parameters**, while still targeting visually pleasing enhancement under strict NTIRE efficiency constraints. The repository includes inference code, DDP training code, configuration files, and the submitted checkpoint.
+
+**Suggested GitHub repository description**
+
+```text
+Official PyTorch implementation of MobileIE-6Ch, HIT-LLIE-team solution for NTIRE 2026 Efficient Low-Light Image Enhancement. 101.9K-parameter Retinex-style model with pretrained checkpoint.
+```
 
 ## Why MobileIE-6Ch?
 
@@ -169,10 +177,32 @@ The main configuration is in `config/lle.yaml`.
 
 Training logs and checkpoints are written under `experiments/`.
 
+## Reproducibility
+
+This repository includes the core materials needed to reproduce and inspect the submitted solution.
+
+| Asset | Status | Notes |
+| --- | --- | --- |
+| Source code | Included | Model, data loader, losses, metrics, inference, and DDP training |
+| Pretrained checkpoint | Included | `result/model_best.pt`, 101,922 parameters |
+| Training config | Included | `config/lle.yaml` |
+| Dataset | Not redistributed | Please follow the NTIRE challenge dataset policy |
+| Generated predictions | Not tracked | Place inputs in `competition/low/` and outputs are saved to `competition/enhanced_pt/` |
+| Citation metadata | Included | `CITATION.cff` |
+| Model card | Included | `docs/MODEL_CARD.md` |
+| Reproduction notes | Included | `docs/REPRODUCIBILITY.md` |
+
+For more details, see [Reproducibility Notes](docs/REPRODUCIBILITY.md) and [Model Card](docs/MODEL_CARD.md).
+
 ## Repository Layout
 
 ```text
 .
+|-- .github/
+|   `-- ISSUE_TEMPLATE/      # Bug report and question templates
+|-- docs/
+|   |-- MODEL_CARD.md        # Model usage, limitations, and intended scope
+|   `-- REPRODUCIBILITY.md   # Reproduction checklist and environment notes
 |-- competition/
 |   |-- low/                 # Inference inputs
 |   `-- enhanced_pt/         # Inference outputs
@@ -193,6 +223,7 @@ Training logs and checkpoints are written under `experiments/`.
 |-- infer_6channel.py        # Inference entry point
 |-- main_ddp.py              # DDP training entry point
 |-- train_ddp.sh             # Training launcher
+|-- CITATION.cff             # Machine-readable citation metadata
 |-- requirements.txt
 `-- team_info.txt
 ```

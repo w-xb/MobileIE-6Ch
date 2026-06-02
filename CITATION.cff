@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+message: "If you use this repository, please cite the NTIRE 2026 challenge report and the MobileIE-6Ch solution."
+title: "MobileIE-6Ch: Efficient Low-Light Image Enhancement for NTIRE 2026"
+authors:
+  - family-names: Wang
+    given-names: Xinbai
+    affiliation: "Harbin Institute of Technology"
+  - family-names: Liu
+    given-names: Duo
+    affiliation: "Harbin Institute of Technology"
+year: 2026
+license: Apache-2.0
+repository-code: "https://github.com/w-xb/MobileIE-6Ch"
+url: "https://github.com/w-xb/MobileIE-6Ch"
+abstract: "Official PyTorch implementation of MobileIE-6Ch, the HIT-LLIE-team solution for the NTIRE 2026 Efficient Low-Light Image Enhancement Challenge."
+keywords:
+  - low-light image enhancement
+  - image restoration
+  - efficient neural networks
+  - Retinex
+  - NTIRE 2026
+preferred-citation:
+  type: article
+  title: "NTIRE 2026 Challenge on Efficient Low Light Image Enhancement: Methods and Results"
+  authors:
+    - family-names: Yan
+      given-names: Jiebin
+    - family-names: Tu
+      given-names: Chenyu
+    - family-names: Lin
+      given-names: Qinghua
+  journal: "arXiv preprint arXiv:2605.02212"
+  year: 2026
+  url: "https://arxiv.org/html/2605.02212v1"
