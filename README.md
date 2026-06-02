@@ -49,6 +49,14 @@ The released checkpoint contains only **101,922 parameters**, while still target
 Official PyTorch implementation of MobileIE-6Ch, HIT-LLIE-team solution for NTIRE 2026 Efficient Low-Light Image Enhancement. 101.9K-parameter Retinex-style model with pretrained checkpoint.
 ```
 
+## Visual Results
+
+The examples below show low-light inputs and the corresponding MobileIE-6Ch enhanced outputs. The model improves scene brightness while recovering visible structure in indoor, outdoor, street, and object-detail scenes.
+
+<p align="center">
+  <img src="docs/assets/mobileie6ch_qualitative_results.jpg" alt="MobileIE-6Ch qualitative low-light enhancement results" width="100%">
+</p>
+
 ## Why MobileIE-6Ch?
 
 | Design Goal | What We Do |
